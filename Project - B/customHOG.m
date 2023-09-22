@@ -36,7 +36,7 @@ function features = customHOG(image, cellSize, blockSize, numBins)
                     cellMagnitude = magnitude(yStart:yEnd, xStart:xEnd);
                     cellOrientation = orientation(yStart:yEnd, xStart:xEnd);
                     
-                    cell_hist = zeros(1, numBins);
+                    histr=zeros(1,numBins);
                     
                     for k = 1:8
                         for l = 1:8
@@ -45,48 +45,41 @@ function features = customHOG(image, cellSize, blockSize, numBins)
                         
                             % Binning Process (Bi-Linear Interpolation)
                             if alpha>10 && alpha<=30
-                                histr(1)=histr(1)+ magA(k,l)*(30-alpha)/20;
-                                histr(2)=histr(2)+ magA(k,l)*(alpha-10)/20;
+                                histr(1)=histr(1)+ CellMagnitude(k,l)*(30-alpha)/20;
+                                histr(2)=histr(2)+ CellMagnitude(k,l)*(alpha-10)/20;
                             elseif alpha>30 && alpha<=50
-                                histr(2)=histr(2)+ magA(k,l)*(50-alpha)/20;                 
-                                histr(3)=histr(3)+ magA(k,l)*(alpha-30)/20;
+                                histr(2)=histr(2)+ CellMagnitude(k,l)*(50-alpha)/20;                 
+                                histr(3)=histr(3)+ CellMagnitude(k,l)*(alpha-30)/20;
                             elseif alpha>50 && alpha<=70
-                                histr(3)=histr(3)+ magA(k,l)*(70-alpha)/20;
-                                histr(4)=histr(4)+ magA(k,l)*(alpha-50)/20;
+                                histr(3)=histr(3)+ CellMagnitude(k,l)*(70-alpha)/20;
+                                histr(4)=histr(4)+ CellMagnitude(k,l)*(alpha-50)/20;
                             elseif alpha>70 && alpha<=90
-                                histr(4)=histr(4)+ magA(k,l)*(90-alpha)/20;
-                                histr(5)=histr(5)+ magA(k,l)*(alpha-70)/20;
+                                histr(4)=histr(4)+ CellMagnitude(k,l)*(90-alpha)/20;
+                                histr(5)=histr(5)+ CellMagnitude(k,l)*(alpha-70)/20;
                             elseif alpha>90 && alpha<=110
-                                histr(5)=histr(5)+ magA(k,l)*(110-alpha)/20;
-                                histr(6)=histr(6)+ magA(k,l)*(alpha-90)/20;
+                                histr(5)=histr(5)+ CellMagnitude(k,l)*(110-alpha)/20;
+                                histr(6)=histr(6)+ CellMagnitude(k,l)*(alpha-90)/20;
                             elseif alpha>110 && alpha<=130
-                                histr(6)=histr(6)+ magA(k,l)*(130-alpha)/20;
-                                histr(7)=histr(7)+ magA(k,l)*(alpha-110)/20;
+                                histr(6)=histr(6)+ CellMagnitude(k,l)*(130-alpha)/20;
+                                histr(7)=histr(7)+ CellMagnitude(k,l)*(alpha-110)/20;
                             elseif alpha>130 && alpha<=150
-                                histr(7)=histr(7)+ magA(k,l)*(150-alpha)/20;
-                                histr(8)=histr(8)+ magA(k,l)*(alpha-130)/20;
+                                histr(7)=histr(7)+ CellMagnitude(k,l)*(150-alpha)/20;
+                                histr(8)=histr(8)+ CellMagnitude(k,l)*(alpha-130)/20;
                             elseif alpha>150 && alpha<=170
-                                histr(8)=histr(8)+ magA(k,l)*(170-alpha)/20;
-                                histr(9)=histr(9)+ magA(k,l)*(alpha-150)/20;
+                                histr(8)=histr(8)+ CellMagnitude(k,l)*(170-alpha)/20;
+                                histr(9)=histr(9)+ CellMagnitude(k,l)*(alpha-150)/20;
                             elseif alpha>=0 && alpha<=10
-                                histr(1)=histr(1)+ magA(k,l)*(alpha+10)/20;
-                                histr(9)=histr(9)+ magA(k,l)*(10-alpha)/20;
+                                histr(1)=histr(1)+ CellMagnitude(k,l)*(alpha+10)/20;
+                                histr(9)=histr(9)+ CellMagnitude(k,l)*(10-alpha)/20;
                             elseif alpha>170 && alpha<=180
-                                histr(9)=histr(9)+ magA(k,l)*(190-alpha)/20;
-                                histr(1)=histr(1)+ magA(k,l)*(alpha-170)/20;
-                        end
-
-                            % Determine the bin index
-                            bin = floor((cellOrientation(k,l) / 180) * numBins) + 1;
-                            bin = max(min(bin, numBins), 1);
-
-                            % Add magnitude to the appropriate bin
-                            cell_hist(bin) = cell_hist(bin) + cellMagnitude(k,l);
+                                histr(9)=histr(9)+ CellMagnitude(k,l)*(190-alpha)/20;
+                                histr(1)=histr(1)+ CellMagnitude(k,l)*(alpha-170)/20;
+                            end
                         end
                     end
                     
                     % Concatenate the block histogram to the feature vector
-                    blockHistogram = [blockHistogram cell_hist];
+                    blockHistogram = [blockHistogram histr];
                 end
             end
             
